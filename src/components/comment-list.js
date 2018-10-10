@@ -4,11 +4,10 @@ import toggleDecorator from '../decorators/toggle'
 
 class commentsList extends Component {
   render() {
-    const buttonText = this.props.isOpen ? 'Close comments' : 'Open comments'
     return (
       <div>
         <h3>Comments</h3>
-        <button onClick={this.onToggle}>{buttonText}</button>
+        {this.openBtn}
         <ul>{this.items}</ul>
         {this.emptyText}
       </div>
@@ -18,9 +17,22 @@ class commentsList extends Component {
     open: false
   }
 
-  get emptyText() {
+  get isEmpty() {
     const { comments } = this.props
-    return !comments && 'No comments yet...'
+    return !comments
+  }
+
+  get openBtn() {
+    if (this.isEmpty) return null
+    return (
+      <button onClick={this.onToggle}>
+        {this.isOpen ? 'Hide comments' : 'Show comments'}
+      </button>
+    )
+  }
+
+  get emptyText() {
+    return this.isEmpty && 'No comments yet...'
   }
 
   get items() {
