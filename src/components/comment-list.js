@@ -10,7 +10,7 @@ class CommentList extends Component {
   }
 */
   static propTypes = {
-    comments: PropTypes.array.isRequired,
+    comments: PropTypes.array,
     isOpen: PropTypes.bool,
     toggleOpen: PropTypes.func
   }
