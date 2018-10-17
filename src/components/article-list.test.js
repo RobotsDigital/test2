@@ -13,7 +13,6 @@ describe('ArticleList', () => {
 
   it('should render items', () => {
     const container = shallow(<ArticleList articles={articles} />)
-
     expect(container.find('.test--article-list__item').length).toEqual(
       articles.length
     )
