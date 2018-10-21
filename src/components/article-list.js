@@ -19,8 +19,21 @@ export class ArticleList extends Component {
   }
 
   get items() {
-    const { articles, openItemId, toggleOpenItem } = this.props
-    return articles.map((article) => (
+    const { articles, filters, openItemId, toggleOpenItem } = this.props
+    // Стоит ли выносить в стору отфильтрованные значения
+    const filtredArticles = articles.filter((article) => {
+      const articleDate = new Date(article.date)
+      const { from, to } = filters.dateRange
+
+      if (from && articleDate <= from) return false
+      if (to && articleDate >= to) return false
+      if (filters.selected.length)
+        return filters.selected.some((select) => select.value === article.id)
+
+      return true
+    })
+
+    return filtredArticles.map((article) => (
       <li key={article.id} className="test--article-list__item">
         <Article
           article={article}
@@ -40,5 +53,6 @@ export class ArticleList extends Component {
 const ArticleListWithAccordion = accordionDecorator(ArticleList)
 
 export default connect((state) => ({
-  articles: state.articles
+  articles: state.articles,
+  filters: state.filters
 }))(ArticleListWithAccordion)
