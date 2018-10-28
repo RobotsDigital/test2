@@ -22,11 +22,12 @@ export class ArticleList extends Component {
 
   get items() {
     const { articles, openItemId, toggleOpenItem } = this.props
-    return articles.map((article) => (
-      <li key={article.id} className="test--article-list__item">
+    console.log(Object.keys(articles))
+    return articles.map((articleId) => (
+      <li key={articleId} className="test--article-list__item">
         <Article
-          article={article}
-          isOpen={openItemId === article.id}
+          id={articleId}
+          isOpen={openItemId === articleId}
           toggleOpen={toggleOpenItem}
         />
       </li>

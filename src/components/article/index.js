@@ -8,6 +8,7 @@ import './style.css'
 
 class Article extends PureComponent {
   static propTypes = {
+    id: PropTypes.string,
     article: PropTypes.shape({
       title: PropTypes.string.isRequired,
       text: PropTypes.string
@@ -63,13 +64,17 @@ class Article extends PureComponent {
     return (
       <section className="test--article__body">
         {article.text}
-        <CommentList comments={article.comments} />
+        <CommentList articleId={article.id} />
       </section>
     )
   }
 }
 
+const createMapStateToProps = (state, ownProps) => {
+  return { article: state.articles[ownProps.id] }
+}
+
 export default connect(
-  null,
+  createMapStateToProps,
   { deleteArticle }
 )(Article)
