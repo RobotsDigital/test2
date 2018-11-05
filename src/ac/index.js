@@ -7,6 +7,7 @@ import {
   LOAD_ALL_ARTICLES,
   LOAD_ARTICLE,
   LOAD_ARTICLE_COMMENTS,
+  LOAD_COMMENTS,
   SUCCESS,
   FAIL,
   START
@@ -77,6 +78,17 @@ export function loadArticleById(id) {
           error
         })
       )
+  }
+}
+
+export function loadCommentsByPage(page) {
+  const limit = 5
+  const offset = (page - 1) * limit
+
+  return {
+    type: LOAD_COMMENTS,
+    payload: { page },
+    callAPI: `/api/comment?limit=${limit}&offset=${offset}`
   }
 }
 

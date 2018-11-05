@@ -5,12 +5,15 @@ export const dateRangeSelector = (state) => state.filters.dateRange
 export const articlesLoadingSelector = (state) => state.articles.loading
 export const articlesLoadedSelector = (state) => state.articles.loaded
 export const articlesMapSelector = (state) => state.articles.entities
+export const pagesStateMapSelector = (state) => state.comments.byPageEntities
+
 export const articleListSelector = createSelector(
   articlesMapSelector,
   (articlesMap) => articlesMap.valueSeq().toArray()
 )
 export const commentsSelector = (state) => state.comments
 export const idSelector = (_, props) => props.id
+export const pageSelector = (_, page) => page
 
 export const filtratedArticlesSelector = createSelector(
   selectionSelector,
@@ -40,4 +43,12 @@ export const articleSelector = createSelector(
   articlesMapSelector,
   idSelector,
   (articles, id) => articles.get(id)
+)
+
+export const pageStateSelector = createSelector(
+  pagesStateMapSelector,
+  pageSelector,
+  (pagesList, page) => {
+    return pagesList.get(page)
+  }
 )

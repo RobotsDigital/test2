@@ -1,4 +1,10 @@
-import { ADD_COMMENT, LOAD_ARTICLE_COMMENTS, SUCCESS } from '../constants'
+import {
+  ADD_COMMENT,
+  LOAD_COMMENTS,
+  LOAD_ARTICLE_COMMENTS,
+  SUCCESS,
+  START
+} from '../constants'
 import { Record, OrderedMap } from 'immutable'
 import { arrToMap } from './utils'
 
@@ -8,8 +14,16 @@ const CommentRecord = Record({
   user: null
 })
 
+const PageRecord = Record({
+  commentIds: new OrderedMap({}),
+  loading: false,
+  loaded: false,
+  total: 0
+})
+
 const ReducerRecord = Record({
-  entities: new OrderedMap({})
+  entities: new OrderedMap({}),
+  byPageEntities: arrToMap([], PageRecord)
 })
 
 export default (state = new ReducerRecord(), action) => {
@@ -26,7 +40,24 @@ export default (state = new ReducerRecord(), action) => {
       )
 
     case LOAD_ARTICLE_COMMENTS + SUCCESS:
+      console.log(response)
       return state.mergeIn(['entities'], arrToMap(response, CommentRecord))
+
+    case LOAD_COMMENTS + START:
+      return state
+        .setIn(['byPageEntities', payload.page], new PageRecord())
+        .setIn(['byPageEntities', payload.page, 'loading'], true)
+
+    case LOAD_COMMENTS + SUCCESS:
+      return state
+        .mergeIn(['entities'], arrToMap(response.records, CommentRecord))
+        .setIn(['byPageEntities', payload.page, 'loading'], false)
+        .setIn(['byPageEntities', payload.page, 'loaded'], true)
+        .setIn(['byPageEntities', payload.page, 'total'], response.total)
+        .setIn(
+          ['byPageEntities', payload.page, 'commentIds'],
+          response.records.map((comment) => comment.id)
+        )
 
     default:
       return state
